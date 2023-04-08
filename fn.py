@@ -96,51 +96,74 @@ def insert_trabajador():
     con.commit()
 
   # los metodos de pagos pueden insertarse directamente en la base de datos para pedirse en una consulta y mostrarse en una lista
-def metodo_pago():
+def insert_pago():
     con = sqlite3.connect("Fincapp.db")
 
     cur = con.cursor()
-
+        #En este metodo se consultan los valores de la tabla metodo pago y se agregan en la variable "metodo_pago" 
+        # y se van mostando por medio de un bucle fory se van convirtiendo en listas y
+        #  finalmente con la funcion join se eliminan los parentesis y comillas y se separan las columnas por un ')' tambien inserta el id del metodo de pago correspondiente al pago
     cur.execute("SELECT * FROM metodopago")
     metodo_pago = cur.fetchall()
     for metodo in metodo_pago:
         lista_metodo = list(metodo)
         print(') '.join(str(valor) for valor in lista_metodo))
-    input("""Elija el metodo de pago: """)
-
-
-        # funcion para insertar id de metodos de pago en pagos
-def insert_pago():
-    con = sqlite3.connect("Fincapp.db")
-
-    cur = con.cursor()
-
-    result = con.execute("SELECT id FROM metodopago ORDER BY id DESC LIMIT 1")
-    last_id_metodopago = result.fetchone()[0]
-
-    con.execute("INSERT INTO id_metodopago VALUES (?)",(last_id_metodopago))
+    pago = input("""Elija el metodo de pago: """)
+    con.execute("INSERT INTO pago(id_metodopago) values(?)", (pago))
     con.commit()
+    con.close()
 
+        # funcion para agregar una categoria nueva
 
 def insert_categorias():
     con = sqlite3.connect("Fincapp.db")
 
     cur = con.cursor()
+  
+    nom_cat = input("Nombre la categoria a crear: ")
+    icon = input("Agregue un icono para su categoria: ")
+    if bool(icon):
+        icon = None
+        
+    con.execute("INSERT INTO categoria(nom_cat, icono) values(?, ?)", (nom_cat, icon))
 
     con.commit()
     con.close()
 
+def insert_productos():
+    con = sqlite3.connect("Fincapp.db")
+
+    cur = con.cursor()
+
+    nomb = input("inserte el nombre del producto a agregar: ")
+    valor = float(input("Agrege el valor unitario del producto: "))
+    desc = input("Agrege una breve descripcion del producto: ")
+    cur.execute("SELECT * FROM categoria")
+    categorias = cur.fetchall()
+    for categoria in categorias:
+        lista_categorias = list(categoria)
+        print(') '.join(str(valor) for valor in lista_categorias))
+    cat = int(input("Elija el numero de la categoria a utilizar: "))
+    
+
+    con.execute("INSERT INTO producto(nombre, valor_unit, descripcion, id_categoria) values(?, ?, ?, ?)",(nomb, valor, desc, cat))
+    con.commit()
+
 # insert_email()
 # insert_telefono()
 # insert_persona()
-metodo_pago()
+# insert_pago()
+# insert_categorias()
+insert_productos()
 con = sqlite3.connect("Fincapp.db")
 cur = con.cursor()
 
-cur.execute("""select p.nom1, p.ap1, t.numero,e.correo || '@' || e.dominio as correo, tp.tipo_persona from persona p 
-                 inner join telefono t on t.id = p.id_telefono 
-                 inner join email e on e.id = p.id_email
-                 inner join tipo_persona tp on tp.id = p.id_tipo_persona""")
+# cur.execute("""select p.nom1, p.ap1, t.numero,e.correo || '@' || e.dominio as correo, tp.tipo_persona from persona p 
+#                  inner join telefono t on t.id = p.id_telefono 
+#                  inner join email e on e.id = p.id_email
+#                  inner join tipo_persona tp on tp.id = p.id_tipo_persona""")
+
+cur.execute("select * from producto")
 
 
 print(cur.fetchall())
