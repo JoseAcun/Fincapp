@@ -96,7 +96,18 @@ def insert_trabajador():
     con.commit()
 
   # los metodos de pagos pueden insertarse directamente en la base de datos para pedirse en una consulta y mostrarse en una lista
-# def metodo_pago():
+def metodo_pago():
+    con = sqlite3.connect("Fincapp.db")
+
+    cur = con.cursor()
+
+    cur.execute("SELECT * FROM metodopago")
+    metodo_pago = cur.fetchall()
+    for metodo in metodo_pago:
+        lista_metodo = list(metodo)
+        print(') '.join(str(valor) for valor in lista_metodo))
+    input("""Elija el metodo de pago: """)
+
 
         # funcion para insertar id de metodos de pago en pagos
 def insert_pago():
@@ -122,6 +133,7 @@ def insert_categorias():
 # insert_email()
 # insert_telefono()
 # insert_persona()
+metodo_pago()
 con = sqlite3.connect("Fincapp.db")
 cur = con.cursor()
 

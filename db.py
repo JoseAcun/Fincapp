@@ -39,4 +39,7 @@ cur.execute("create table movimiento(cantidad int,fecha date,descripcion_movimie
                     # Insercion de los datos en la tabla tipo_persona
 cur.execute("""INSERT INTO tipo_persona(tipo_persona) values('Natural'),('Juridica')""") 
 
+                    # Insercion de los datos en la tabla metodo de pago
+cur.execute("INSERT INTO metodopago(metodo_pago) values('Efectivo'), ('tarjeta'), ('transferencia'), ('otro')",)
+
 con.commit()
