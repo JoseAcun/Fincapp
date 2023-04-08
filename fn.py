@@ -80,6 +80,45 @@ def insert_persona():
 
     con.commit()
 
+            #el insert trabajador requiere una consulta al registro persona y tammbien una consulta a la tabla administrador
+
+def insert_trabajador():
+    con = sqlite3.connect("Fincapp.db")
+
+    cur = con.cursor()  
+
+    result = con.execute("SELECT id FROM persona ORDER BY id DESC LIMIT 1")
+    last_id_persona = result.fetchone()[0]
+
+    sueldo = float(input("Ingrese el sueldo del trabajador: "))
+
+
+    con.commit()
+
+  # los metodos de pagos pueden insertarse directamente en la base de datos para pedirse en una consulta y mostrarse en una lista
+# def metodo_pago():
+
+        # funcion para insertar id de metodos de pago en pagos
+def insert_pago():
+    con = sqlite3.connect("Fincapp.db")
+
+    cur = con.cursor()
+
+    result = con.execute("SELECT id FROM metodopago ORDER BY id DESC LIMIT 1")
+    last_id_metodopago = result.fetchone()[0]
+
+    con.execute("INSERT INTO id_metodopago VALUES (?)",(last_id_metodopago))
+    con.commit()
+
+
+def insert_categorias():
+    con = sqlite3.connect("Fincapp.db")
+
+    cur = con.cursor()
+
+    con.commit()
+    con.close()
+
 # insert_email()
 # insert_telefono()
 # insert_persona()
