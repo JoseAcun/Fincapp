@@ -14,6 +14,7 @@ def insert_telefono():
     # uso del comando execute para usar una funcion sql en la base de datos en este caso para insertar los datos
     cur.execute(sql, (indice, numero))
     con.commit()
+    con.close()
 
     # funcion para insertar datos en la tabla email
 def insert_email():
@@ -37,6 +38,8 @@ def insert_email():
     # uso del comando execute para usar una funcion sql en la base de datos en este caso para insertar los datos
     cur.execute(sql, (correo, dominio))
     con.commit()
+    con.close()
+
     # funcion para agregar datos en la tabla personas
 
 
@@ -63,14 +66,14 @@ def insert_persona():
 
     if len(nombres) == 1:
         nombre_1 = nombres[0]
-        nombre_2 = ''
+        nombre_2 = None
     else:
         nombre_1 = nombres[0]
         nombre_2 = nombres[1]
 
     if len(apellidos) == 1:
         apellido_1 = apellidos[0]
-        apellido_2 = ''
+        apellido_2 = None
     else:
         apellido_1 = apellidos[0]
         apellido_2 = apellidos[1]
@@ -79,6 +82,7 @@ def insert_persona():
                     (nombre_1, nombre_2, apellido_1, apellido_2, last_id_email, last_id_telefono, tipo_persona))
 
     con.commit()
+    con.close()
 
             #el insert trabajador requiere una consulta al registro persona y tammbien una consulta a la tabla administrador
 
@@ -94,6 +98,7 @@ def insert_trabajador():
 
 
     con.commit()
+    con.close()
 
   # los metodos de pagos pueden insertarse directamente en la base de datos para pedirse en una consulta y mostrarse en una lista
 def insert_pago():
@@ -130,6 +135,7 @@ def insert_categorias():
     con.commit()
     con.close()
 
+    # funcion para insertar los productos nuevos en la base de datos
 def insert_productos():
     con = sqlite3.connect("Fincapp.db")
 
@@ -138,6 +144,10 @@ def insert_productos():
     nomb = input("inserte el nombre del producto a agregar: ")
     valor = float(input("Agrege el valor unitario del producto: "))
     desc = input("Agrege una breve descripcion del producto: ")
+    cantidad = int(input("Cuantos tiene disponible? "))
+    if bool(cantidad):
+        cantidad = None
+
     cur.execute("SELECT * FROM categoria")
     categorias = cur.fetchall()
     for categoria in categorias:
@@ -146,15 +156,53 @@ def insert_productos():
     cat = int(input("Elija el numero de la categoria a utilizar: "))
     
 
-    con.execute("INSERT INTO producto(nombre, valor_unit, descripcion, id_categoria) values(?, ?, ?, ?)",(nomb, valor, desc, cat))
+    con.execute("INSERT INTO producto(cantidad, nombre, valor_unit, descripcion, id_categoria) values(?, ?, ?, ?, ?)",(cantidad, nomb, valor, desc, cat))
     con.commit()
+    con.close()
+
+def insert_admin():
+    con = sqlite3.connect("Fincapp.db")
+
+    cur = con.cursor()
+
+    user = input("Ingrese su nombre de usuario: ")
+    contra = input("ingrese su contraseña: ")
+    result = con.execute("SELECT id FROM persona ORDER BY id DESC LIMIT 1")
+    last_id_persona = result.fetchone()[0]
+
+    con.execute("INSERT INTO administrador(usuario, contraseña, id_persona) values(?, ?, ?)", (user, contra, last_id_persona))
+
+    con.commit()
+    con.close()
+
+def login(username, password):
+    con = sqlite3.connect("Fincapp.db")
+    cur = con.cursor()
+    
+    user = input("Ingrese su usuario: ")
+    PasW = input("ingrese su contraseña: ")
+
+    con.execute("SELECT id, usuario, contraseña FROM administrador")
+    if cur.fetchall()
+
+
+def insert_movimiento():
+    cantidad = int(input("ingrese la cantidad de productos del movimiento: "))
+    fecha = input("Inserte la fecha en formato YYYY-MM-DD: ")
+    descripcion = input("Inserte una breve descripcion del movimiento realizado: ")
+    result = con.execute("SELECT id_persona FROM administrador WHERE id_persona = id")
+    id_persona = result.fetchone()[0]
+
 
 # insert_email()
 # insert_telefono()
 # insert_persona()
-# insert_pago()
+# insert_admin()
 # insert_categorias()
-insert_productos()
+# insert_productos()
+# insert_pago()
+login("admin", "password")
+
 con = sqlite3.connect("Fincapp.db")
 cur = con.cursor()
 
@@ -162,8 +210,6 @@ cur = con.cursor()
 #                  inner join telefono t on t.id = p.id_telefono 
 #                  inner join email e on e.id = p.id_email
 #                  inner join tipo_persona tp on tp.id = p.id_tipo_persona""")
-
-cur.execute("select * from producto")
 
 
 print(cur.fetchall())
