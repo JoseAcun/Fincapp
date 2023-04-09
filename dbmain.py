@@ -190,7 +190,7 @@ class DbMain():
     def get_user_pswd(self, id):
         self.conn = sqlite3.connect(self.dbname)
         self.curs = self.conn.cursor()
-        sqltext = "SELECT password FROM administrador WHERE id='{}' LIMIT 1".format(
+        sqltext = "SELECT passwordu FROM administrador WHERE id='{}' LIMIT 1".format(
             id)
         self.curs.execute(sqltext)
         row = self.curs.fetchone()
@@ -210,7 +210,7 @@ class DbMain():
     def upd_user_passwd(self, id, nupwd):
         self.conn = sqlite3.connect(self.dbname)
         self.curs = self.conn.cursor()
-        sqltext = """UPDATE administrador SET password = '{}' WHERE id = {}""".format(
+        sqltext = """UPDATE administrador SET passwordu = '{}' WHERE id = {}""".format(
             nupwd, id)
         print(sqltext)
         self.curs.execute(sqltext)
