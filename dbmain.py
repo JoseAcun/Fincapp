@@ -39,7 +39,7 @@ class DbMain():
         self.curs.execute(cmd)
         self.conn.commit()
         
-        cmd = """CREATE TABLE IF NOT EXISTS producto(id integer primary key autoincrement,nombre varchar(50),valor_unit float,descripcion text,id_categoria int,foreign key (id_categoria) references categoria(id))"""
+        cmd = """CREATE TABLE IF NOT EXISTS producto(id integer primary key autoincrement, cantidad int, nombre varchar(50),valor_unit float,descripcion text,id_categoria int,foreign key (id_categoria) references categoria(id))"""
         self.curs.execute(cmd)
         self.conn.commit()
         

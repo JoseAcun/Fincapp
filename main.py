@@ -32,7 +32,7 @@ class MainApp(MDApp):
         self.theme_cls.primary_palette = 'Purple'
         self.theme_cls.primaru_hue = '500'
         self.theme_cls.theme_style = 'Dark'
-        self.db = DbMain('myappdb.db')
+        self.db = DbMain('Fincapp.db')
         self.curr_user_id = -1
         self.curr_user_name = ""
         self.curr_user_email = ""

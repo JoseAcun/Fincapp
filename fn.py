@@ -140,12 +140,16 @@ def insert_productos():
     con = sqlite3.connect("Fincapp.db")
 
     cur = con.cursor()
-
+    
+    cantidad = int(input("Cuantos tiene disponible? "))
     nomb = input("inserte el nombre del producto a agregar: ")
     valor = float(input("Agrege el valor unitario del producto: "))
     desc = input("Agrege una breve descripcion del producto: ")
-    cantidad = int(input("Cuantos tiene disponible? "))
+    
     if bool(cantidad):
+        cantidad = cantidad
+
+    else:
         cantidad = None
 
     cur.execute("SELECT * FROM categoria")
@@ -175,42 +179,45 @@ def insert_admin():
     con.commit()
     con.close()
 
-def login(username, password):
-    con = sqlite3.connect("Fincapp.db")
-    cur = con.cursor()
-    
-    user = input("Ingrese su usuario: ")
-    PasW = input("ingrese su contraseña: ")
-
-    con.execute("SELECT id, usuario, contraseña FROM administrador")
-    if cur.fetchall()
-
 
 def insert_movimiento():
+
+    con = sqlite3.connect("Fincapp.db")
+
+    cur = con.cursor()
+    
     cantidad = int(input("ingrese la cantidad de productos del movimiento: "))
     fecha = input("Inserte la fecha en formato YYYY-MM-DD: ")
     descripcion = input("Inserte una breve descripcion del movimiento realizado: ")
-    result = con.execute("SELECT id_persona FROM administrador WHERE id_persona = id")
-    id_persona = result.fetchone()[0]
 
+    result = con.execute("SELECT currid FROM curr_admin")
+    id_sesion = result.fetchone()[0]
+
+    res = con.execute("SELECT id_persona FROM administrador WHERE id = {}".format(id_sesion))
+    id_persona = res.fetchone()[0]
+
+    r = con.execute("SELECT id FROM pago ORDER BY id DESC LIMIT 1")
+    last_id_pago = r.fetchone()[0]
+
+    r2 = con.execute("SELECT * FROM producto")
+    productos = r2.fetchall()
+    for producto in productos:
+        lista_producto = list(producto)
+        print(') '.join(str(valor) for valor in lista_producto))
+
+    producto = int(input("Seleccione el producto: "))
+
+    con.execute("INSERT INTO movimiento(cantidad, fecha, descripcion_movimiento, id_persona, id_pago, id_producto) values(?, ?, ?, ?, ?, ?)"
+                ,(cantidad, fecha, descripcion, id_persona, last_id_pago, producto))
+    con.commit()
+    con.close()
 
 # insert_email()
 # insert_telefono()
 # insert_persona()
 # insert_admin()
-# insert_categorias()
-# insert_productos()
-# insert_pago()
-login("admin", "password")
+insert_categorias()
+insert_productos()
+insert_pago()
+insert_movimiento()
 
-con = sqlite3.connect("Fincapp.db")
-cur = con.cursor()
-
-# cur.execute("""select p.nom1, p.ap1, t.numero,e.correo || '@' || e.dominio as correo, tp.tipo_persona from persona p 
-#                  inner join telefono t on t.id = p.id_telefono 
-#                  inner join email e on e.id = p.id_email
-#                  inner join tipo_persona tp on tp.id = p.id_tipo_persona""")
-
-
-print(cur.fetchall())
-con.commit()
