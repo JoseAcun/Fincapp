@@ -2,6 +2,8 @@
 #:include kv/loginscreen.kv
 #:include kv/registerscreen.kv
 #:include kv/settingscreen.kv
+#:include kv/categoryscreen.kv
+#:include kv/inscategoryscreen.kv
 
 Screen:
     MDNavigationLayout:
@@ -21,6 +23,12 @@ Screen:
             SettingsScreen:
                 name: "scr_settings"
                 id: scr_settings
+            CategoryScreen:
+                name: "scr_categoria"
+                id: scr_categoria
+            InsCategoryScreen:
+                name: "scr_inscategoria"
+                id: scr_inscategoria
 
     MDNavigationDrawer:
         id: nav_drawer
@@ -48,12 +56,12 @@ Screen:
                 MDList:
 #-----insert screen NAME here, refer screen name from SCREEN MANAGER
                     OneLineIconListItem:
-                        text: 'Login'
+                        text: 'Categorias'
                         on_release: 
-                            screen_manager.current = "scr_login"
+                            screen_manager.current = "scr_categoria"
                             nav_drawer.set_state("close")
                         IconLeftWidget:
-                            icon: 'alien'
+                            icon: 'shape'
                     OneLineIconListItem:
                         text: 'Home'
                         on_release: 

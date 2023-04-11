@@ -5,7 +5,7 @@ from kivy.uix.screenmanager import Screen, NoTransition, CardTransition
 from dbmain import DbMain
 from kivy.properties import ObjectProperty
 from kivymd.uix.snackbar import Snackbar
-
+from kivy.uix.button import Button
 
 Window.size = (375, 750)
 
@@ -26,10 +26,17 @@ class SettingsScreen(Screen):
     pass
 
 
+class CategoryScreen(Screen):
+    pass
+
+class InsCategoryScreen(Screen):
+    pass
+
+
 class MainApp(MDApp):
 
     def on_start(self):
-        self.theme_cls.primary_palette = 'Purple'
+        self.theme_cls.primary_palette = 'Green'
         self.theme_cls.primaru_hue = '500'
         self.theme_cls.theme_style = 'Dark'
         self.db = DbMain('Fincapp.db')
@@ -101,5 +108,19 @@ class MainApp(MDApp):
             screen_manager.get_screen(
                 'scr_settings').ids.txt_info_settings.text = "[color=ff0000]Wrong old password.[/color]"
 
+    def register_cat(self, categoriai):
+        screen_manager = self.root.ids.screen_manager
+        self.db.ins_tbl_cat(categoriai)
+        Snackbar(text="New User Registered!").open()
+        
+    def actualizar_categorias(self):
+        self.layout.clear_widgets()
 
+        self.cur.execute('SELECT * FROM categorias')
+        categorias = self.cur.fetchall()
+
+        for categoria in categorias:
+            btn = Button(text=categoria[1])
+            self.botones.append(btn)
+            self.layout.add_widget(btn)
 MainApp().run()

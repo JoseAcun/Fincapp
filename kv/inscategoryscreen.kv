@@ -1,0 +1,47 @@
+<InsCategoryScreen>:
+    #name: "scr_inscategoria"
+    #md_bg_color: []
+
+    orientation: 'vertical'
+    padding: dp(16)
+
+    MDLabel:
+        text: 'Insertar Categorías'
+        font_style: 'H4'
+        halign: 'center'
+        size_hint_y: None
+        height: self.texture_size[1] + dp(1300)
+
+    MDBoxLayout:
+        orientation: 'vertical'
+        spacing: dp(10)
+        padding: dp(10)
+
+        MDTextFieldRound:
+            id:txt_categoriai
+            hint_text: "Nombre de categoria"
+            size_hint_x: None
+            width: 220
+            font_size: 20
+            pos_hint: {"center_x":.5}
+            color_active:[1,1,1,1]
+        #do this to enable tab keyboard button to cycle through text inputs...      
+            write_tab: False
+            multiline: False
+            on_text_validate: root.foo()
+        #   
+
+        MDBoxLayout:
+            id: layout
+            orientation: 'vertical'
+            spacing: dp(10)
+
+        MDRoundFlatButton:
+            id: btn_cat
+            text: 'categoria ins'
+            font_size: 15
+            pos_hint: {"center_x":.5}
+            on_release:
+                app.register_cat(txt_categoriai.text)
+                app.change_screen("scr_categoria", direction='right', mode='push')
+             

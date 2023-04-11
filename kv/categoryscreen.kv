@@ -1,0 +1,22 @@
+<CategoryScreen>:
+    #name: "scr_categoria"
+    #md_bg_color: []
+
+    orientation: 'vertical'
+    padding: dp(16)
+
+    MDLabel:
+        text: 'Categorías'
+        font_style: 'H4'
+        halign: 'center'
+        size_hint_y: None
+        height: self.texture_size[1] + dp(1300)
+
+
+    MDRoundFlatButton:
+        id: btn_inscat
+        text: 'Insertar categoria'
+        font_size: 15
+        pos_hint: {"center_x":.5}
+        on_release: app.change_screen("scr_inscategoria", direction='right', mode='push')
+            

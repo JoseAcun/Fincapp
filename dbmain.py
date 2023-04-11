@@ -1,6 +1,7 @@
 import sqlite3
 
 
+
 class DbMain():
     def __init__(self, dbname):
         self.dbname = dbname
@@ -35,7 +36,7 @@ class DbMain():
         self.curs.execute(cmd)
         self.conn.commit()
         
-        cmd = """CREATE TABLE IF NOT EXISTS categoria(id integer primary key autoincrement,nom_cat varchar(50),icono blob)"""
+        cmd = """CREATE TABLE IF NOT EXISTS categoria(id integer primary key autoincrement,nom_cat varchar(50))"""
         self.curs.execute(cmd)
         self.conn.commit()
         
@@ -65,6 +66,8 @@ class DbMain():
         self.conn.close()
         
         self.trc_tbl('curr_admin')
+        
+        self.botones = []
 
     def ins_tbl_telefono(self, indice, numero):
         self.conn = sqlite3.connect(self.dbname)
@@ -225,3 +228,10 @@ class DbMain():
         self.conn.commit()
         self.conn.close()
         # return 1
+
+    def ins_tbl_cat(self, categoriai):
+        self.conn = sqlite3.connect(self.dbname)
+        self.curs = self.conn.cursor()
+        self.curs.execute("""INSERT INTO categoria(nom_cat) VALUES(?)""", (categoriai,))
+        self.conn.commit()
+        self.conn.close()
