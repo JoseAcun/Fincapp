@@ -215,36 +215,48 @@ def insert_movimiento():
 
 
 def edit():
-
     con = sqlite3.connect("Fincapp.db")
-
     cur = con.cursor()  
 
-    tbl = input("tabla a modificar")
+    table_name = input("Ingrese el nombre de la tabla que desea actualizar: ")
 
-    # Ejecutar una consulta
-    cur.execute('SELECT * FROM {}',format(tbl))
-
-    # Obtener los nombres de las columnas y guardarlos en una lista
+    # Obtener los nombres de las columnas de la tabla
+    cur.execute(f"SELECT * FROM {table_name}")
     column_names = [description[0] for description in cur.description]
-    
-    # Imprimir la lista de nombres de columnas
-    print(column_names)
 
-    patron = r"\b(?!(?:\w*id\w*))\w+\b" # Expresión regular para buscar variables que no contienen "id"
+    res = cur.execute(f"SELECT * From {table_name}")
+    tbl_con = res.fetchall()
+    for producto in tbl_con:
+        lista_producto = list(producto)
+        print(') '.join(str(valor) for valor in lista_producto))
 
-    for names in column_names:
-        variables = re.findall(patron, names)
-        lista_variables.append(variables)
+    id = int(input("Elija el id de la categoria a modificar"))
+    # Preguntar al usuario qué campos desea actualizar
+    fields_to_update = []
+    while True:
+        field_name = input(f"Ingrese el nombre del campo que desea actualizar (o 'q' para terminar): ")
+        if field_name == 'q':
+            break
+        elif field_name not in column_names:
+            print(f"El campo '{field_name}' no existe en la tabla '{table_name}'. Inténtelo nuevamente.")
+        else:
+            new_value = input(f"Ingrese el nuevo valor para el campo '{field_name}': ")
+            fields_to_update.append((field_name, new_value))
 
-    lista_variables = re.findall(patron, variables)
+    # Generar la consulta SQL dinámica para actualizar solo los campos especificados por el usuario
+    sql_query = f"UPDATE {table_name} SET "
+    for i, field in enumerate(fields_to_update):
+        field_name, new_value = field
+        sql_query += f"{field_name} = '{new_value}'"
+        if i != len(fields_to_update) - 1:
+            sql_query += ", "
+    sql_query += f"WHERE id={id};"
 
-    print(lista_variables)
-
-    long_list = len(lista_variables)
+    cur.execute(sql_query)
 
     con.commit()
     con.close()
+
 
 # insert_email()
 # insert_telefono()
@@ -254,6 +266,7 @@ def edit():
 # insert_productos()
 # insert_pago()
 # insert_movimiento()
+edit()
 
 
 
