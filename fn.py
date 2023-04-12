@@ -1,3 +1,4 @@
+import re
 import sqlite3
     # funcion para insertar datos en la tabla telefonos
 def insert_telefono():
@@ -212,12 +213,47 @@ def insert_movimiento():
     con.commit()
     con.close()
 
+
+def edit():
+
+    con = sqlite3.connect("Fincapp.db")
+
+    cur = con.cursor()  
+
+    tbl = input("tabla a modificar")
+
+    # Ejecutar una consulta
+    cur.execute('SELECT * FROM {}',format(tbl))
+
+    # Obtener los nombres de las columnas y guardarlos en una lista
+    column_names = [description[0] for description in cur.description]
+    
+    # Imprimir la lista de nombres de columnas
+    print(column_names)
+
+    patron = r"\b(?!(?:\w*id\w*))\w+\b" # Expresión regular para buscar variables que no contienen "id"
+
+    for names in column_names:
+        variables = re.findall(patron, names)
+        lista_variables.append(variables)
+
+    lista_variables = re.findall(patron, variables)
+
+    print(lista_variables)
+
+    long_list = len(lista_variables)
+
+    con.commit()
+    con.close()
+
 # insert_email()
 # insert_telefono()
 # insert_persona()
 # insert_admin()
-insert_categorias()
-insert_productos()
-insert_pago()
-insert_movimiento()
+# insert_categorias()
+# insert_productos()
+# insert_pago()
+# insert_movimiento()
+
+
 
