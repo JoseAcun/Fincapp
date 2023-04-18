@@ -1,7 +1,4 @@
 <InsCategoryScreen>:
-    #name: "scr_inscategoria"
-    #md_bg_color: []
-
     orientation: 'vertical'
     padding: dp(16)
 
@@ -16,6 +13,9 @@
         orientation: 'vertical'
         spacing: dp(10)
         padding: dp(10)
+        size_hint_y: None
+        height: self.minimum_height
+        pos_hint: {"center_y": .5}
 
         MDTextFieldRound:
             id:txt_categoriai
@@ -25,16 +25,21 @@
             font_size: 20
             pos_hint: {"center_x":.5}
             color_active:[1,1,1,1]
-        #do this to enable tab keyboard button to cycle through text inputs...      
             write_tab: False
             multiline: False
             on_text_validate: root.foo()
-        #   
 
-        MDBoxLayout:
-            id: layout
-            orientation: 'vertical'
-            spacing: dp(10)
+        MDTextFieldRound:
+            id:txt_icono
+            hint_text: "icono"
+            size_hint_x: None
+            width: 220
+            font_size: 20
+            pos_hint: {"center_x":.5}
+            color_active:[1,1,1,1]
+            write_tab: False
+            multiline: False
+            on_text_validate: root.foo()
 
         MDRoundFlatButton:
             id: btn_cat
@@ -42,6 +47,5 @@
             font_size: 15
             pos_hint: {"center_x":.5}
             on_release:
-                app.register_cat(txt_categoriai.text)
+                app.register_cat(txt_categoriai.text, txt_icono.text)
                 app.change_screen("scr_categoria", direction='right', mode='push')
-             

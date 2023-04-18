@@ -36,7 +36,7 @@ class DbMain():
         self.curs.execute(cmd)
         self.conn.commit()
         
-        cmd = """CREATE TABLE IF NOT EXISTS categoria(id integer primary key autoincrement,nom_cat varchar(50))"""
+        cmd = """CREATE TABLE IF NOT EXISTS categoria(id integer primary key autoincrement,nom_cat varchar(50), icono icon)"""
         self.curs.execute(cmd)
         self.conn.commit()
         
@@ -56,14 +56,19 @@ class DbMain():
         self.curs.execute(cmd)
         self.conn.commit()
         
-        cmd = """INSERT INTO tipo_persona(tipo_persona) values('Natural'),('Juridica')"""
-        self.curs.execute(cmd)
-        self.conn.commit()
+        # Verifica si la tabla "tipo_persona" ya tiene registros
+        self.curs.execute("SELECT * FROM tipo_persona")
+        if not self.curs.fetchone():
+            cmd = """INSERT INTO tipo_persona(tipo_persona) values('Natural'),('Juridica')"""
+            self.curs.execute(cmd)
+            self.conn.commit()
         
-        cmd = """INSERT INTO metodopago(metodo_pago) values('Efectivo'), ('tarjeta'), ('transferencia'), ('otro')"""
-        self.curs.execute(cmd)
-        self.conn.commit()
-        self.conn.close()
+        # Verifica si la tabla "metodopago" ya tiene registros
+        self.curs.execute("SELECT * FROM metodopago")
+        if not self.curs.fetchone():
+            cmd = """INSERT INTO metodopago(metodo_pago) values('Efectivo'), ('tarjeta'), ('transferencia'), ('otro')"""
+            self.curs.execute(cmd)
+            self.conn.commit()
         
         self.trc_tbl('curr_admin')
         
@@ -108,19 +113,26 @@ class DbMain():
         nombres = nombres_apellidos[:2]
         apellidos = nombres_apellidos[2:]
 
+        if len(nombres_apellidos) <= 2:
+            nombres = nombres_apellidos
+            apellidos = [None]
+        else:
+            nombres = nombres_apellidos[:2]
+            apellidos = nombres_apellidos[2:]
+
         if len(nombres) == 1:
             nombre_1 = nombres[0]
-            nombre_2 = ''
+            nombre_2 = None
         else:
             nombre_1 = nombres[0]
-            nombre_2 = nombres[1]
+            nombre_2 = nombres[1] if len(nombres) > 1 else None
 
         if len(apellidos) == 1:
             apellido_1 = apellidos[0]
-            apellido_2 = ''
+            apellido_2 = None
         else:
             apellido_1 = apellidos[0]
-            apellido_2 = apellidos[1]
+            apellido_2 = apellidos[1] if len(apellidos) > 1 else None
         
         sqltext = """INSERT INTO persona(nom1, nom2, ap1, ap2, id_email, id_telefono, id_tipo_persona, active)
                     VALUES(?,?,?,?,?,?,?,?)"""
@@ -229,9 +241,17 @@ class DbMain():
         self.conn.close()
         # return 1
 
-    def ins_tbl_cat(self, categoriai):
-        self.conn = sqlite3.connect(self.dbname)
-        self.curs = self.conn.cursor()
-        self.curs.execute("""INSERT INTO categoria(nom_cat) VALUES(?)""", (categoriai,))
-        self.conn.commit()
-        self.conn.close()
+    def ins_tbl_cat(self, nom_cat, icon):
+        con = sqlite3.connect(self.dbname)
+        cur = con.cursor()
+
+        if bool(icon):
+            icon = icon
+        else:
+            icon = None
+
+        query = "INSERT INTO categoria(nom_cat, icono) values (?, ?)"
+        cur.execute(query, (nom_cat, icon))
+
+        con.commit()
+        con.close()
